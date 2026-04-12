@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API } from '@/config/api';
 import Header from '@/components/Header';
 import AQMap from '@/components/AQMap';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,7 +23,7 @@ const Map = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get("https://clearairwave-obf5.onrender.com/api/sensors");
+        const response = await axios.get(API.sensors);
         setRealSensors(response.data); // Set real sensor data
         setIsLoading(false);
       } catch (err) {

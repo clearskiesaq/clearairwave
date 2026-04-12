@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import { formatPM25 } from '@/utils/aqiUtils';
+import { API } from '@/config/api';
 import { X, LocateFixed } from 'lucide-react';
 import L from 'leaflet';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -185,7 +186,7 @@ const AQMap = () => {
     const fetchData = async () => {
       if (!isMounted) return;
       try {
-        const response = await axios.get("https://clearairwave-obf5.onrender.com/api/sensors");
+        const response = await axios.get(API.sensors);
         if (isMounted) {
           setSensors(response.data);
           setError(null);

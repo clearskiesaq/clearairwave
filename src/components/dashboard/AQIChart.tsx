@@ -13,6 +13,7 @@ import {
   Text,
 } from 'recharts';
 import axios from 'axios';
+import { API } from '@/config/api';
 // import { formatPM25 } from '@/utils/aqiUtils'; // This import was present but not used in the provided code.
 
 interface AQIChartProps {
@@ -70,7 +71,7 @@ const AQIChart: React.FC<AQIChartProps> = ({
         const backendField = metricAliasMap[selectedMetric!] || selectedMetric!;
 
         if (timeRange === '24h') {
-          const response = await axios.get('https://clearairwave-obf5.onrender.com/api/hourly', {
+          const response = await axios.get(API.hourly, {
             params: {
               sensor_id: sensorId,
               metric: backendField, 
@@ -86,7 +87,7 @@ const AQIChart: React.FC<AQIChartProps> = ({
           }));
         } else {
           // Fetch historical data from /api/historical
-          const response = await axios.get('https://clearairwave-obf5.onrender.com/api/historical', {
+          const response = await axios.get(API.historical, {
             params: { 
               time_range: timeRange,
               sensor_id: sensorId,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { API } from '@/config/api';
 import { ArrowRight, Wind, Thermometer, CloudRain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatPM25 } from '@/utils/aqiUtils';
@@ -17,7 +18,7 @@ const HeroSection = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get("https://clearairwave-obf5.onrender.com/api/sensors");
+        const response = await axios.get(API.sensors);
         setRealSensors(response.data); // Set real sensor data
         setIsLoading(false);
       } catch (err) {

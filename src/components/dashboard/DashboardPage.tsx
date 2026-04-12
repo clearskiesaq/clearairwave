@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { formatPM25 } from '@/utils/aqiUtils';
+import { API } from '@/config/api';
 import AQIChart from './AQIChart';
 import DataTable from './DataTable';
 import DataCard from '@/components/ui/DataCard';
@@ -46,7 +47,7 @@ const sensorIdFromQuery = searchParams.get('sensorId');
 useEffect(() => {
   const fetchSensorNames = async () => {
     try {
-      const response = await axios.get('https://clearairwave-obf5.onrender.com/api/sensors');
+      const response = await axios.get(API.sensors);
       const sensors: SensorInfo[] = response.data.map((sensor: any) => ({
         id: sensor.id,
         name: sensor.name,
@@ -88,7 +89,7 @@ useEffect(() => {
   const fetchMainData = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('https://clearairwave-obf5.onrender.com/api/sensors');
+      const response = await axios.get(API.sensors);
       setRealSensors(response.data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch sensors'));

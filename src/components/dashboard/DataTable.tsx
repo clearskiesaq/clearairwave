@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, Filter } from 'lucide-react';
+import { API } from '@/config/api';
 import { getAQICategory, formatPM25 } from '@/utils/aqiUtils';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -33,7 +34,7 @@ const DataTable = () => {
   const refreshData = async () => {
   try {
     setIsLoading(true);
-    const response = await axios.get('https://clearairwave-obf5.onrender.com/api/refreshtable');
+    const response = await axios.get(API.refreshTable);
     setRealSensors(response.data);
   } catch (err) {
     setError(err instanceof Error ? err : new Error('Failed to refresh sensor data'));
@@ -48,7 +49,7 @@ const DataTable = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get('https://clearairwave-obf5.onrender.com/api/sensors');
+        const response = await axios.get(API.sensors);
         setRealSensors(response.data); // Set real sensor data
         setIsLoading(false);
       } catch (err) {

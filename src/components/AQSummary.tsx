@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowUpRight, ArrowDown, ArrowUp } from 'lucide-react';
+import { API } from '@/config/api';
 import { getAQICategory, formatPM25, getHealthRecommendations } from '@/utils/aqiUtils';
 import {calculateStatistics} from '@/utils/dummyData'
 import { cn } from '@/lib/utils';
@@ -18,8 +19,8 @@ const AQSummary = () => {
       try {
         setIsLoading(true);
         const [sensorResponse, hourlyResponse] = await Promise.all([
-          axios.get("https://clearairwave-obf5.onrender.com/api/sensors"),
-          axios.get("https://clearairwave-obf5.onrender.com/api/hourly"),
+          axios.get(API.sensors),
+          axios.get(API.hourly),
         ]);
         setRealSensors(sensorResponse.data);
         setHourlyData(hourlyResponse.data);
