@@ -17,6 +17,9 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import AQIGauge from './AQIGauge';
 import LungVisualizer from './LungVisualizer';
 import MoleculeView from './MoleculeView';
+import SensorCompare from './SensorCompare';
+import HeatmapCalendar from './HeatmapCalendar';
+import ExportButton from './ExportButton';
 
 
 const DashboardPage = () => {
@@ -246,6 +249,9 @@ useEffect(() => {
                     ))}
                   </select>
                 </div>
+                <div className="flex items-end">
+                  <ExportButton sensorId={selectedSensorId} timeRange={timeRange} />
+                </div>
               </div>
 
             </div>
@@ -321,6 +327,15 @@ useEffect(() => {
             <MoleculeView pm25={stats.averagePM25} pm10={0} no2={0} o3={0} so2={0} />
           </div>
         </div>
+
+        <div className="mb-10">
+          <SensorCompare />
+        </div>
+
+        <div className="mb-10">
+          <HeatmapCalendar sensorId={selectedSensorId} />
+        </div>
+
                 <p className="text-xs text-muted-foreground text-center italic mb-8">
   Disclaimer: Air quality data is collected from community-deployed sensors for informational purposes. These sensors are not certified regulatory monitors and may vary in accuracy.
 </p>
