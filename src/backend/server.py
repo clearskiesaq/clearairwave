@@ -808,6 +808,147 @@ def get_count():
 
 
 # ----------------------------------------
+# New Endpoints: Breathability, Streak, Compare, Export, Network Health
+# ----------------------------------------
+
+@app.get("/api/breathability")
+def get_breathability():
+    if not DATA["sensors"]:
+        return {"score": 0, "label": "No data", "description": "No sensors available"}
+    sensors = DATA["sensors"]
+    avg_pm25 = sum(s.pm25 for s in sensors) / len(sensors)
+    avg_humidity = sum(s.humidity for s in sensors) / len(sensors)
+    avg_temp = sum(s.temperature for s in sensors) / len(sensors)
+
+    pm25_score = max(0, 100 - (avg_pm25 / 50) * 100)
+    temp_ideal = 21
+    temp_score = max(0, 100 - abs(avg_temp - temp_ideal) * 5)
+    humidity_score = max(0, 100 - abs(avg_humidity - 45) * 2)
+
+    score = round(pm25_score * 0.6 + temp_score * 0.2 + humidity_score * 0.2)
+    score = max(0, min(100, score))
+
+    if score >= 80: label, desc = "Excellent", "Perfect conditions for outdoor activities"
+    elif score >= 60: label, desc = "Good", "Great day to be outside"
+    elif score >= 40: label, desc = "Fair", "Consider limiting prolonged outdoor exertion"
+    elif score >= 20: label, desc = "Poor", "Sensitive groups should stay indoors"
+    else: label, desc = "Very Poor", "Everyone should limit outdoor exposure"
+
+    return {"score": score, "label": label, "description": desc,
+            "components": {"pm25": round(pm25_score), "temperature": round(temp_score), "humidity": round(humidity_score)}}
+
+
+@app.get("/api/streak")
+async def get_streak():
+    if not DATA["sensors"]:
+        return {"days": 0, "active": False}
+    sensor_id = DATA["sensors"][0].id
+    cache_key = f"historical:{sensor_id}:pm2.5_ug_m3:30d"
+    history = cache.get(cache_key)
+    if history is None:
+        try:
+            history = await generate_historical_data(sensor_id, "pm2.5_ug_m3", "30d")
+            cache.set(cache_key, history)
+        except:
+            return {"days": 0, "active": False}
+
+    streak = 0
+    for day in reversed(history):
+        pm25_val = day.get("pm2.5")
+        if pm25_val is not None and pm25_val <= 12:
+            streak += 1
+        else:
+            break
+    return {"days": streak, "active": streak > 0}
+
+
+@app.get("/api/compare")
+async def compare_sensors(
+    sensors: str = Query(..., description="Comma-separated sensor IDs"),
+    metric: str = Query("pm2.5"),
+    time_range: str = Query("24h"),
+):
+    sensor_ids = [s.strip() for s in sensors.split(",")]
+    backend_field = DATA_VAL_DICT.get(metric, "pm2.5_ug_m3")
+    results = {}
+    if time_range == "24h":
+        for sid in sensor_ids:
+            data = generate_24hour_data(datetime.now().isoformat(), backend_field, sid)
+            sensor_name = next((s.name for s in DATA["sensors"] if s.id == sid), sid)
+            results[sensor_name] = data
+    else:
+        tasks = [generate_historical_data(sid, backend_field, time_range) for sid in sensor_ids]
+        fetched = await asyncio.gather(*tasks, return_exceptions=True)
+        for sid, data in zip(sensor_ids, fetched):
+            if isinstance(data, Exception):
+                continue
+            sensor_name = next((s.name for s in DATA["sensors"] if s.id == sid), sid)
+            results[sensor_name] = data
+    return results
+
+
+@app.get("/api/export")
+async def export_data(
+    format: str = Query("csv"),
+    sensor_id: Optional[str] = Query(None),
+    time_range: str = Query("7d"),
+):
+    if not sensor_id and DATA["sensors"]:
+        sensor_id = DATA["sensors"][0].id
+    if not sensor_id:
+        return {"error": "No sensors available"}
+
+    data = await generate_historical_data(sensor_id, "pm2.5_ug_m3", time_range)
+
+    if format == "csv":
+        output = io.StringIO()
+        writer = csv.DictWriter(output, fieldnames=["timestamp", "pm2.5"])
+        writer.writeheader()
+        for row in data:
+            writer.writerow(row)
+        output.seek(0)
+        return StreamingResponse(
+            iter([output.getvalue()]),
+            media_type="text/csv",
+            headers={"Content-Disposition": f"attachment; filename=clearskies_{time_range}.csv"}
+        )
+    return data
+
+
+@app.get("/api/network-health")
+def get_network_health():
+    if not DATA["sensors"]:
+        return {"sensors": [], "overall_health": 0}
+
+    now = datetime.now()
+    sensor_health = []
+    for s in DATA["sensors"]:
+        last = s.lastUpdated
+        minutes_ago = (now - last).total_seconds() / 60 if last else 999
+
+        if minutes_ago < 30: status = "online"
+        elif minutes_ago < 120: status = "delayed"
+        else: status = "offline"
+
+        quality = 100
+        if s.pm25 == 0: quality -= 25
+        if s.temperature == 0: quality -= 25
+        if s.humidity == 0: quality -= 25
+        if s.pressure == 0: quality -= 25
+
+        sensor_health.append({
+            "id": s.id, "name": s.name, "status": status,
+            "minutes_since_update": round(minutes_ago),
+            "data_quality": max(0, quality),
+            "location": {"lat": s.location.lat, "lng": s.location.lng}
+        })
+
+    online = sum(1 for s in sensor_health if s["status"] == "online")
+    overall = round((online / len(sensor_health)) * 100) if sensor_health else 0
+    return {"sensors": sensor_health, "overall_health": overall, "total": len(sensor_health), "online": online}
+
+
+# ----------------------------------------
 # Run the Server (Uvicorn)
 # ----------------------------------------
 if __name__ == "__main__":
