@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
 import { useEffect } from "react";
 import ScrollToTop from "./components/ScrollToTop";
+import Soundscape from './components/Soundscape';
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner position="top-right" closeButton richColors />
+        <Soundscape />
         <BrowserRouter>
         <ScrollToTop />
           <AnimatePresence mode="wait">
