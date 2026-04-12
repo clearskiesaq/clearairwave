@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AnimatePresence } from 'framer-motion';
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Map from "./pages/Map";
@@ -43,15 +44,16 @@ const App = () => {
         <Sonner position="top-right" closeButton richColors />
         <BrowserRouter>
         <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/map" element={<Map />} />
-            <Route path="*" element={<NotFound />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<AboutPage />} />
-
-          </Routes>
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/map" element={<Map />} />
+              <Route path="*" element={<NotFound />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<AboutPage />} />
+            </Routes>
+          </AnimatePresence>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, BarChart2, Users, Globe, Bell } from 'lucide-react';
 import EmailSubscription from '@/components/dashboard/EmailSubscription';
 import Footer from '@/components/Footer'
+import ScrollReveal from '@/components/ScrollReveal';
 
 
 const Index = () => {
@@ -22,6 +23,7 @@ const Index = () => {
         <EmailSubscription />
 
         {/* Features section */}
+        <ScrollReveal>
         <section id = "guide" className="py-16 bg-gradient-to-b from-white to-secondary/30">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -29,11 +31,11 @@ const Index = () => {
                 Breathe Better with ClearSkies
               </h2>
               <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
-                Our platform provides comprehensive air quality monitoring and analytics 
+                Our platform provides comprehensive air quality monitoring and analytics
                 to help communities breathe cleaner air.
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
@@ -57,8 +59,8 @@ const Index = () => {
                   description: "Understand how air quality relates to broader environmental trends."
                 }
               ].map((feature, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="glass-card p-6 rounded-xl hover:scale-[1.01] transition-all duration-300"
                 >
                   <div className="mb-4">{feature.icon}</div>
@@ -69,9 +71,13 @@ const Index = () => {
             </div>
           </div>
         </section>
+        </ScrollReveal>
         
+        <ScrollReveal delay={0.1}>
         <AQSummary />
+        </ScrollReveal>
         
+        <ScrollReveal delay={0.1}>
         <section className="py-16 bg-white relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-8">
@@ -90,14 +96,17 @@ const Index = () => {
                 </Link>
               </div>
             </div>
-            
+
             <div className="relative w-full h-[500px] rounded-xl shadow-lg overflow-hidden border border-white/20">
               <AQMap />
             </div>
           </div>
         </section>
+        </ScrollReveal>
         <div id = "aqt"></div>
+        <ScrollReveal delay={0.1}>
         <AirQualityTips/>
+        </ScrollReveal>
       </main>
       <Footer/>
     </div>
