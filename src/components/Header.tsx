@@ -41,20 +41,24 @@ const Header = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-    // Remove dark mode on initial load
-    useEffect(() => {
-      document.documentElement.classList.remove('dark');
-      setIsDarkMode(false);
-    }, []);
-
-//  Toggle dark mode
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
+  // Load saved theme from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
       document.documentElement.classList.add('dark');
+      setIsDarkMode(true);
     } else {
       document.documentElement.classList.remove('dark');
+      setIsDarkMode(false);
     }
+  }, []);
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    const next = !isDarkMode;
+    setIsDarkMode(next);
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
   };
 
   return (
@@ -127,13 +131,16 @@ const Header = () => {
 
         {/* Action Buttons */}
         <div className="hidden md:flex items-center space-x-2">
+          <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="rounded-full">
+            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
         </div>
 
         {/* Mobile Navigation Button */}
         <div className="flex md:hidden items-center space-x-2">
-          {/* <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="rounded-full">
+          <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="rounded-full">
             {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button> */}
+          </Button>
           <button
             className="rounded-lg p-2 text-foreground hover:bg-secondary"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

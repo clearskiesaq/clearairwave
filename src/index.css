@@ -104,7 +104,11 @@
   .glass-card {
     @apply bg-white/80 backdrop-blur-lg border border-white/20 shadow-glass transition-all duration-300;
   }
-  
+
+  .dark .glass-card {
+    @apply bg-gray-900/80 backdrop-blur-lg border-gray-700/30 shadow-glass;
+  }
+
   .glass-card:hover {
     @apply shadow-glass-hover;
   }
