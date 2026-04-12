@@ -23,6 +23,11 @@ from tenacity import (
 #Loading Env Variables
 from dotenv import load_dotenv
 import os
+import time as time_module
+import csv
+import io
+from fastapi.responses import StreamingResponse
+from fastapi.middleware.gzip import GZipMiddleware
 load_dotenv()
 
 todaysPoints = {"count": 0, "date": date.today()} #Gloval Variable
@@ -55,6 +60,32 @@ def save_prev_safe_ids(ids: set):
         f.write("\n".join(ids))
 
 #previously_safe_ids = load_prev_safe_ids() #Global Variable for trigger logic
+
+# ----------------------------------------
+# In-Memory Cache with TTL
+# ----------------------------------------
+
+class DataCache:
+    """Simple in-memory cache with TTL."""
+    def __init__(self):
+        self._store: Dict[str, tuple] = {}
+
+    def get(self, key: str, max_age: float = 300):
+        if key in self._store:
+            data, timestamp = self._store[key]
+            return data
+        return None
+
+    def is_fresh(self, key: str, max_age: float = 300) -> bool:
+        if key in self._store:
+            _, timestamp = self._store[key]
+            return time_module.time() - timestamp < max_age
+        return False
+
+    def set(self, key: str, data):
+        self._store[key] = (data, time_module.time())
+
+cache = DataCache()
 
 # ----------------------------------------
 # AQI Utility Functions (from aqiUtils.ts)
@@ -675,6 +706,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 scheduler = AsyncIOScheduler()
 scheduler.add_job(refresh_data, 'interval', minutes=10)
@@ -685,6 +717,11 @@ async def startup_event():
     """Load initial data and start the scheduler on server startup."""
     await refresh_data()
     scheduler.start()
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "sensors": len(DATA["sensors"]), "timestamp": datetime.now().isoformat()}
 
 
 @app.get("/api/sensors", response_model=List[Sensor])
@@ -704,22 +741,33 @@ async def get_historical(
     metric:    Optional[str] = Query(None),
     time_range: Optional[str] = Query(None),
 ):
-    # default sensor
     if not sensor_id:
         if not DATA["sensors"]:
             return []
         sensor_id = DATA["sensors"][0].id
-
-    # default metric
     if not metric:
         metric = "pm2.5"
-
     backend_field = DATA_VAL_DICT.get(metric)
     if backend_field is None:
         return []
 
-    # **await** your async function here
-    return await generate_historical_data(sensor_id, backend_field, time_range)
+    cache_key = f"historical:{sensor_id}:{backend_field}:{time_range}"
+    cached = cache.get(cache_key, max_age=600)
+    if cached is not None:
+        if not cache.is_fresh(cache_key, max_age=600):
+            asyncio.create_task(_refresh_historical_cache(cache_key, sensor_id, backend_field, time_range))
+        return cached
+
+    result = await generate_historical_data(sensor_id, backend_field, time_range)
+    cache.set(cache_key, result)
+    return result
+
+async def _refresh_historical_cache(cache_key, sensor_id, backend_field, time_range):
+    try:
+        result = await generate_historical_data(sensor_id, backend_field, time_range)
+        cache.set(cache_key, result)
+    except Exception as e:
+        print(f"Background cache refresh failed: {e}")
 
 
 
