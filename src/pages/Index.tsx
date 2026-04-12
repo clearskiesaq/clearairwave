@@ -11,6 +11,8 @@ import { ArrowRight, BarChart2, Users, Globe, Bell } from 'lucide-react';
 import EmailSubscription from '@/components/dashboard/EmailSubscription';
 import Footer from '@/components/Footer'
 import ScrollReveal from '@/components/ScrollReveal';
+import StreakCounter from '@/components/StreakCounter';
+import BestTimeTimeline from '@/components/BestTimeTimeline';
 
 
 const Index = () => {
@@ -21,6 +23,20 @@ const Index = () => {
         <div id = "email"></div>
         <HeroSection />
         <EmailSubscription />
+
+        {/* Streak + Best Time section */}
+        <section className="py-12 bg-gradient-to-b from-white to-secondary/20 dark:from-gray-900 dark:to-gray-800/50">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ScrollReveal>
+                <StreakCounter />
+              </ScrollReveal>
+              <ScrollReveal delay={0.15}>
+                <BestTimeTimeline />
+              </ScrollReveal>
+            </div>
+          </div>
+        </section>
 
         {/* Features section */}
         <ScrollReveal>
