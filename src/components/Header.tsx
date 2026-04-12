@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, BarChart, Map, Home, Info, Bell, Moon, Sun} from 'lucide-react';
+import { Menu, X, BarChart, Map, Home, Info, Bell, Moon, Sun, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react';
@@ -19,6 +19,7 @@ const Header = () => {
     { name: 'Dashboard', path: '/dashboard', icon: <BarChart className="h-4 w-4 mr-1.5" /> },
     { name: 'Map', path: '/map', icon: <Map className="h-4 w-4 mr-1.5" /> },
     { name: 'About', path: '/about', icon: <Info className="h-4 w-4 mr-1.5" /> },
+    { name: 'Network', path: '/network', icon: <Activity className="h-4 w-4 mr-1.5" /> },
     { name: 'Contact', path: '/contact', icon: <Mail className="h-4 w-4 mr-1.5" /> },
   ];
 

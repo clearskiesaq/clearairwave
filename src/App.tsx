@@ -11,6 +11,7 @@ import Map from "./pages/Map";
 import Contact from "./pages/Contact"
 import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
+import NetworkHealth from "./pages/NetworkHealth";
 import { useEffect } from "react";
 import ScrollToTop from "./components/ScrollToTop";
 import Soundscape from './components/Soundscape';
@@ -54,6 +55,7 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/network" element={<NetworkHealth />} />
             </Routes>
           </AnimatePresence>
         </BrowserRouter>
