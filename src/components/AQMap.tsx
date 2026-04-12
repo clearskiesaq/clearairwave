@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.heat';
 import axios from 'axios';
 import { formatPM25 } from '@/utils/aqiUtils';
 import { API } from '@/config/api';
@@ -169,9 +170,52 @@ const RecenterButton = ({ sensors }: { sensors: any[] }) => {
   );
 };
 
+const HeatmapLayer = ({ sensors, visible }: { sensors: any[]; visible: boolean }) => {
+  const map = useMap();
 
+  useEffect(() => {
+    if (!visible || sensors.length === 0) {
+      // Remove existing heat layer
+      map.eachLayer((layer: any) => {
+        if (layer._heat) map.removeLayer(layer);
+      });
+      return;
+    }
 
+    // Remove old heat layer first
+    map.eachLayer((layer: any) => {
+      if (layer._heat) map.removeLayer(layer);
+    });
 
+    const heatData: [number, number, number][] = sensors.map((s: any) => [
+      s.location.lat,
+      s.location.lng,
+      Math.min(s.pm25 / 30, 1), // normalize intensity
+    ]);
+
+    const heat = (L as any).heatLayer(heatData, {
+      radius: 45,
+      blur: 35,
+      maxZoom: 15,
+      gradient: {
+        0.0: '#4ade80',
+        0.3: '#facc15',
+        0.5: '#fb923c',
+        0.7: '#f87171',
+        0.9: '#c084fc',
+        1.0: '#ef4444',
+      },
+    });
+
+    heat.addTo(map);
+
+    return () => {
+      map.removeLayer(heat);
+    };
+  }, [map, sensors, visible]);
+
+  return null;
+};
 
 const AQMap = () => {
   const navigate = useNavigate();
@@ -180,6 +224,24 @@ const AQMap = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
+  const [showHeatmap, setShowHeatmap] = useState(false);
+  const [showMarkers, setShowMarkers] = useState(true);
+  const [mapStyle, setMapStyle] = useState<'light' | 'dark' | 'satellite'>('light');
+
+  const tileUrls: Record<string, { url: string; attribution: string }> = {
+    light: {
+      url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; <a href="https://carto.com/">Carto</a>',
+    },
+    dark: {
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; <a href="https://carto.com/">Carto</a>',
+    },
+    satellite: {
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      attribution: '&copy; Esri',
+    },
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -240,8 +302,9 @@ const AQMap = () => {
         ref={(map) => setMapInstance(map)}
       >
         <TileLayer
-          attribution='&copy; <a href="https://carto.com/">Carto</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          key={mapStyle}
+          attribution={tileUrls[mapStyle].attribution}
+          url={tileUrls[mapStyle].url}
         />
 
         <CurrentLocationButton />
@@ -251,7 +314,9 @@ const AQMap = () => {
 
         {sensors.length > 0 && <FitBounds sensors={sensors} />}
 
-        {sensors.map((sensor) => {
+        <HeatmapLayer sensors={sensors} visible={showHeatmap} />
+
+        {showMarkers && sensors.map((sensor) => {
           const position: [number, number] = [
             sensor.location.lat + getRandomOffset(0.0005),
             sensor.location.lng + getRandomOffset(0.0005)
@@ -353,6 +418,39 @@ const AQMap = () => {
           );
         })}
       </MapContainer>
+
+      {/* Layer controls */}
+      <div className="absolute top-4 left-4 z-[1000] flex flex-col gap-1.5">
+        <button
+          onClick={() => setShowMarkers(!showMarkers)}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium shadow-md transition-all ${
+            showMarkers ? 'bg-primary text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+          }`}
+        >
+          Markers
+        </button>
+        <button
+          onClick={() => setShowHeatmap(!showHeatmap)}
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium shadow-md transition-all ${
+            showHeatmap ? 'bg-primary text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+          }`}
+        >
+          Heatmap
+        </button>
+        <div className="mt-1 bg-white rounded-lg shadow-md overflow-hidden">
+          {(['light', 'dark', 'satellite'] as const).map((style) => (
+            <button
+              key={style}
+              onClick={() => setMapStyle(style)}
+              className={`block w-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                mapStyle === style ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              {style.charAt(0).toUpperCase() + style.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="absolute bottom-16 right-4 bg-white/90 backdrop-blur-md px-3 py-2.5 rounded-lg shadow-md text-xs z-[1000]">
         <div className="font-medium mb-1.5 text-gray-700">AQI Legend</div>
