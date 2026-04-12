@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import AQIGauge from './AQIGauge';
 import LungVisualizer from './LungVisualizer';
+import MoleculeView from './MoleculeView';
 
 
 const DashboardPage = () => {
@@ -316,6 +317,8 @@ useEffect(() => {
             </div>
 
             <LungVisualizer aqi={avgAQI} pm25={stats.averagePM25} />
+
+            <MoleculeView pm25={stats.averagePM25} pm10={0} no2={0} o3={0} so2={0} />
           </div>
         </div>
                 <p className="text-xs text-muted-foreground text-center italic mb-8">
