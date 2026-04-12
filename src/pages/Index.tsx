@@ -40,7 +40,7 @@ const Index = () => {
 
         {/* Features section */}
         <ScrollReveal>
-        <section id = "guide" className="py-16 bg-gradient-to-b from-white to-secondary/30">
+        <section id = "guide" className="py-16 bg-gradient-to-b from-white to-secondary/30 dark:from-gray-900 dark:to-gray-800/30">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-semibold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
@@ -94,7 +94,7 @@ const Index = () => {
         </ScrollReveal>
         
         <ScrollReveal delay={0.1}>
-        <section className="py-16 bg-white relative overflow-hidden">
+        <section className="py-16 bg-white dark:bg-gray-900 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-semibold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">

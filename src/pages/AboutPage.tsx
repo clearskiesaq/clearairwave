@@ -37,9 +37,9 @@ const AboutPage: React.FC = () => {
     <>
     <Header/>
 
-    <div className="bg-white text-gray-900">
+    <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       {/* Section 1: Mission */}
-      <section className="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-16 bg-gradient-to-r from-blue-50 to-blue-100">
+      <section className="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-16 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
         <div className="md:w-1/2">
           <div className = "w-full">
             <img
@@ -64,7 +64,7 @@ This project is a community-driven initiative to monitor and improve air quality
       </section>
 
       {/* Section 2: Devices */}
-      <section className="min-h-screen flex flex-col-reverse md:flex-row items-center justify-center px-6 py-16 bg-white gap-x-20">
+      <section className="min-h-screen flex flex-col-reverse md:flex-row items-center justify-center px-6 py-16 bg-white dark:bg-gray-900 gap-x-20">
         <div className="md:w-1/2 md:pr-12 mt-8 md:mt-0">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent mb-4">
   The Devices
@@ -101,7 +101,7 @@ This project is a community-driven initiative to monitor and improve air quality
       </section>
 
       {/* Section 3: Developer Team */}
-<section className="px-6 pt-16 pb-8 bg-gradient-to-b from-blue-50 to-white text-center">
+<section className="px-6 pt-16 pb-8 bg-gradient-to-b from-blue-50 to-white dark:from-gray-800 dark:to-gray-900 text-center">
         <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-12">
           Meet the Developers
         </h2>

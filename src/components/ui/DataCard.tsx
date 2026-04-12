@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface DataCardProps {
@@ -31,7 +32,8 @@ const DataCard: React.FC<DataCardProps> = ({
   children
 }) => {
   return (
-    <div
+    <motion.div
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
       className={cn(
         'glass-card rounded-xl p-5 hover:scale-[1.01] transition-all duration-300',
         onClick && 'cursor-pointer',
@@ -76,7 +78,7 @@ const DataCard: React.FC<DataCardProps> = ({
       </div>
       
       {children && <div className="mt-3">{children}</div>}
-    </div>
+    </motion.div>
   );
 };
 

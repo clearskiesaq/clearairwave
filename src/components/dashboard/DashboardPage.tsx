@@ -225,7 +225,7 @@ useEffect(() => {
                   <select
                     value={selectedSensorId}
                     onChange={(e) => setSelectedSensorId(e.target.value)}
-                    className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-gray-200 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   >
                     {sensors.map((sensor) => (
                       <option key={sensor.id} value={sensor.id}>
@@ -240,7 +240,7 @@ useEffect(() => {
                   <select
                     value={selectedMetric}
                     onChange={(e) => setSelectedMetric(e.target.value as typeof metricOptions[number])}
-                    className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                    className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-gray-200 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
                   >
                     {metricOptions.map((metric) => (
                       <option key={metric} value={metric}>

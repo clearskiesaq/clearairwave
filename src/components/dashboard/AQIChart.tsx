@@ -195,7 +195,7 @@ const AQIChart: React.FC<AQIChartProps> = ({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length && selectedMetric) {
       return (
-        <div className="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-lg border border-gray-200 text-sm">
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 text-sm">
           <p className="font-semibold text-gray-700 mb-1">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={`item-${index}`} style={{ color: entry.color }} className="text-gray-600">
@@ -277,7 +277,7 @@ if (showLoadingOrNoData) {
 
 
   return (
-    <div className="w-full overflow-hidden bg-white p-2 rounded-xl shadow-lg">
+    <div className="w-full overflow-hidden bg-white dark:bg-gray-900 p-2 rounded-xl shadow-lg">
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={finalData} margin={{ top: 5, right: 20, left: 10, bottom: 30 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />

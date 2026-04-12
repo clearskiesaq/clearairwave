@@ -298,7 +298,7 @@ const DataTable = () => {
           </thead>
           <tbody className="divide-y divide-border">
             {sortedSensors.map((sensor) => (
-              <tr key={sensor.id} className="hover:bg-secondary/40 transition-colors">
+              <tr key={sensor.id} className="hover:bg-secondary/40 dark:hover:bg-gray-800/40 transition-colors">
                 <td className="py-3 px-4 text-sm">{sensor.name}</td>
                 <td className="py-3 px-4 text-sm font-medium">{formatPM25(sensor.pm25)} µg/m³</td>
                 <td className="py-3 px-4">

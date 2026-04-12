@@ -34,7 +34,7 @@ const Contact = () => {
       <Header />
 
       {/* Icon Info Section */}
-      <section className="pt-24 pb-10 px-6 md:px-24 text-center bg-blue-100">
+      <section className="pt-24 pb-10 px-6 md:px-24 text-center bg-blue-100 dark:bg-gray-800">
         <div className="grid md:grid-cols-3 gap-10 text-center">
           {[
             {
@@ -79,7 +79,7 @@ const Contact = () => {
       </section>
 
   {/* Contact Form Section */}
-<section className="bg-gradient-to-b from-white to-blue-100 px-6 md:px-20 py-20">
+<section className="bg-gradient-to-b from-white to-blue-100 dark:from-gray-900 dark:to-gray-800 px-6 md:px-20 py-20">
   <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-start">
 
     {/* Left Column */}

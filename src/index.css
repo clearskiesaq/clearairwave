@@ -166,6 +166,15 @@
   transition: opacity 300ms;
 }
 
+/* Button micro-interactions */
+button {
+  transition: transform 0.1s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
 /* Loading placeholders */
 .shimmer {
   background: linear-gradient(
