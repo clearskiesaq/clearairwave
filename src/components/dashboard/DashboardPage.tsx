@@ -14,6 +14,8 @@ import DataCard from '@/components/ui/DataCard';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLocation, useSearchParams } from 'react-router-dom';
+import AQIGauge from './AQIGauge';
+import LungVisualizer from './LungVisualizer';
 
 
 const DashboardPage = () => {
@@ -145,6 +147,10 @@ useEffect(() => {
     minPM25: Math.min(...realSensors.map(s => s.pm25)),
   };
 
+  const avgAQI = Math.round(realSensors.reduce((sum: number, s: any) => sum + (s.aqi || 0), 0) / realSensors.length);
+  const avgCategory = stats.averagePM25 <= 12 ? 'Good' : stats.averagePM25 <= 35.4 ? 'Moderate' : stats.averagePM25 <= 55.4 ? 'Unhealthy for Sensitive' : 'Unhealthy';
+  const avgColor = stats.averagePM25 <= 12 ? '#4ade80' : stats.averagePM25 <= 35.4 ? '#facc15' : stats.averagePM25 <= 55.4 ? '#fb923c' : '#f87171';
+
   const highestSensors = [...realSensors]
     .sort((a, b) => b.pm25 - a.pm25)
     .slice(0, 3)
@@ -166,7 +172,10 @@ useEffect(() => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
+          <div className="glass-card rounded-xl p-4 flex items-center justify-center sm:col-span-1">
+            <AQIGauge aqi={avgAQI} category={avgCategory} color={avgColor} size={140} />
+          </div>
           <DataCard
             title="Current Average PM2.5"
             value={`${formatPM25(stats.averagePM25)} µg/m³`}
@@ -305,6 +314,8 @@ useEffect(() => {
                 ))}
               </div>
             </div>
+
+            <LungVisualizer aqi={avgAQI} pm25={stats.averagePM25} />
           </div>
         </div>
                 <p className="text-xs text-muted-foreground text-center italic mb-8">
