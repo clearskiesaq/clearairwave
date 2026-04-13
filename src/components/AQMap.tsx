@@ -252,26 +252,24 @@ const AQMap = () => {
         if (isMounted) {
           setSensors(response.data);
           setError(null);
+          setIsLoading(false);
         }
       } catch (err) {
         if (isMounted) {
           setError(err instanceof Error ? err : new Error('Failed to fetch sensor data'));
-        }
-      } finally {
-        if (isMounted && isLoading) {
           setIsLoading(false);
         }
       }
     };
 
-    fetchData(); // Initial fetch
+    fetchData();
     const intervalId = setInterval(fetchData, 60000);
 
     return () => {
       isMounted = false;
       clearInterval(intervalId);
     };
-  }, [isLoading]);
+  }, []);
 
   if (error && isLoading) {
     return (
