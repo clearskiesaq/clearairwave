@@ -14,7 +14,7 @@ import AboutPage from "./pages/AboutPage";
 import NetworkHealth from "./pages/NetworkHealth";
 import { useEffect } from "react";
 import ScrollToTop from "./components/ScrollToTop";
-import Soundscape from './components/Soundscape';
+// import Soundscape from './components/Soundscape';
 
 const queryClient = new QueryClient();
 
@@ -44,7 +44,7 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner position="top-right" closeButton richColors />
-        <Soundscape />
+        {/* <Soundscape /> */}
         <BrowserRouter>
         <ScrollToTop />
           <AnimatePresence mode="wait">
