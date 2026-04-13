@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { API } from '@/config/api';
 import { ArrowRight, Wind, Thermometer, CloudRain, Activity } from 'lucide-react';
+import { useSensors } from '@/hooks/useSensors';
 import { Button } from '@/components/ui/button';
 import { formatPM25 } from '@/utils/aqiUtils';
 import { calculateStatistics } from '@/utils/dummyData';
@@ -59,29 +60,8 @@ const cardVariants = {
 };
 
 const HeroSection = () => {
-  const [realSensors, setRealSensors] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { data: realSensors = [], isLoading, error } = useSensors();
   const [breathability, setBreathability] = useState<{ score: number; label: string; description: string } | null>(null);
-
-  // Fetch real-time sensor data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(API.sensors);
-        setRealSensors(response.data);
-        setIsLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch sensor data'));
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-    const intervalId = setInterval(fetchData, 60000);
-    return () => clearInterval(intervalId);
-  }, []);
 
   // Fetch breathability score (with local fallback)
   useEffect(() => {
@@ -115,33 +95,31 @@ const HeroSection = () => {
     );
   }
 
-  if (isLoading || !realSensors) {
+  if (isLoading || !realSensors.length) {
     return (
       <div className="relative pb-12 pt-28 md:pb-16 md:pt-32 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none -z-10 opacity-30 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="md:flex md:justify-between md:gap-16 items-center">
-            <div className="space-y-5 max-w-2xl">
-              <span className="inline-flex items-center px-3 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium">
-                Real-time air quality monitoring
-              </span>
-              <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-tight sm:leading-tight">
-                Breathe with confidence.
-                <span className="text-primary block mt-1">Know your air.</span>
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                ClearSkies Community AQ provides real-time air quality monitoring for the residents of
-                <span className="font-medium text-primary"> Licking County, Ohio</span>,
-                helping them make informed decisions about outdoor activities and health protection.
-              </p>
+          <div className="md:flex md:justify-between md:gap-12 items-start">
+            <div className="md:flex-1 space-y-6 md:max-w-[50%]">
+              <div className="space-y-4">
+                <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+                <div className="h-12 w-80 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                <div className="h-12 w-72 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                <div className="h-20 w-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+              </div>
+              <div className="flex gap-3">
+                <div className="h-11 w-40 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+                <div className="h-11 w-32 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+              </div>
             </div>
-            <div className="flex flex-wrap gap-3 sm:gap-4">
-              <Button asChild size="lg" className="rounded-full px-6 group" disabled>
-                View Dashboard
-              </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full px-6" disabled>
-                Explore Map
-              </Button>
+            <div className="md:flex-1 mt-12 md:mt-0 flex flex-col items-center gap-5">
+              <div className="w-52 h-52 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+              <div className="grid grid-cols-2 gap-4 w-full">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-28 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+                ))}
+              </div>
             </div>
           </div>
         </div>

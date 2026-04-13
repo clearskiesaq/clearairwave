@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import { API } from '@/config/api';
@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { RefreshCcw } from 'lucide-react';
+import { useSensors } from '@/hooks/useSensors';
 
 
 const categories = [
@@ -21,47 +22,22 @@ const categories = [
 ];
 
 const DataTable = () => {
-  const [realSensors, setRealSensors] = useState<any[]>([]);
+  const { data: realSensors = [], isLoading, error, refetch } = useSensors();
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' }>({
     key: 'pm25',
     direction: 'descending',
   });
   const [selectedCategories, setSelectedCategories] = useState<string[]>(categories);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
 
   const refreshData = async () => {
-  try {
-    setIsLoading(true);
-    const response = await axios.get(API.refreshTable);
-    setRealSensors(response.data);
-  } catch (err) {
-    setError(err instanceof Error ? err : new Error('Failed to refresh sensor data'));
-  } finally {
-    setIsLoading(false);
-  }
-};
-
-
-  // Fetch real-time sensor data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(API.sensors);
-        setRealSensors(response.data); // Set real sensor data
-        setIsLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch sensor data'));
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-    const intervalId = setInterval(fetchData, 60000); // Refresh every minute
-    return () => clearInterval(intervalId);
-  }, []);
+    try {
+      await axios.get(API.refreshTable);
+      refetch();
+    } catch {
+      // silent
+    }
+  };
 
   if (error) {
     return (
@@ -75,7 +51,15 @@ const DataTable = () => {
   if (isLoading) {
     return (
       <div className="glass-card rounded-lg p-5">
-        <div className="text-center py-8 text-muted-foreground">Loading sensor data...</div>
+        <div className="flex justify-between mb-5">
+          <div className="h-6 w-40 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          <div className="h-9 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+        </div>
+        <div className="space-y-3">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          ))}
+        </div>
       </div>
     );
   }

@@ -6,35 +6,28 @@ import { API } from '@/config/api';
 import { getAQICategory, formatPM25, getHealthRecommendations } from '@/utils/aqiUtils';
 import {calculateStatistics} from '@/utils/dummyData'
 import { cn } from '@/lib/utils';
+import { useSensors } from '@/hooks/useSensors';
 
 const AQSummary = () => {
-  const [realSensors, setRealSensors] = useState<any[]>([]);
+  const { data: realSensors = [], isLoading: sensorsLoading, error: sensorsError } = useSensors();
   const [hourlyData, setHourlyData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [hourlyLoading, setHourlyLoading] = useState(true);
 
-  // Fetch real-time sensor and hourly data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchHourly = async () => {
       try {
-        setIsLoading(true);
-        const [sensorResponse, hourlyResponse] = await Promise.all([
-          axios.get(API.sensors),
-          axios.get(API.hourly),
-        ]);
-        setRealSensors(sensorResponse.data);
-        setHourlyData(hourlyResponse.data);
-        setIsLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch data'));
-        setIsLoading(false);
-      }
+        const res = await axios.get(API.hourly);
+        setHourlyData(res.data);
+      } catch { /* silent */ }
+      setHourlyLoading(false);
     };
-
-    fetchData();
-    const intervalId = setInterval(fetchData, 60000); // Refresh every minute
-    return () => clearInterval(intervalId);
+    fetchHourly();
+    const interval = setInterval(fetchHourly, 60000);
+    return () => clearInterval(interval);
   }, []);
+
+  const isLoading = sensorsLoading || hourlyLoading;
+  const error = sensorsError;
 
   if (error) {
     return (

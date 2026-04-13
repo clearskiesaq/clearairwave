@@ -2,14 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.heat';
-import axios from 'axios';
 import { formatPM25 } from '@/utils/aqiUtils';
-import { API } from '@/config/api';
 import { X, LocateFixed } from 'lucide-react';
 import L from 'leaflet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useNavigate } from 'react-router-dom';
 import { Crosshair } from 'lucide-react';
+import { useSensors } from '@/hooks/useSensors';
 
 
 
@@ -220,9 +219,7 @@ const HeatmapLayer = ({ sensors, visible }: { sensors: any[]; visible: boolean }
 const AQMap = () => {
   const navigate = useNavigate();
   const [selectedSensor, setSelectedSensor] = useState<string | null>(null);
-  const [sensors, setSensors] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { data: sensors = [], isLoading, error } = useSensors();
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showMarkers, setShowMarkers] = useState(true);
@@ -254,34 +251,6 @@ const AQMap = () => {
       attribution: '&copy; Esri',
     },
   };
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchData = async () => {
-      if (!isMounted) return;
-      try {
-        const response = await axios.get(API.sensors);
-        if (isMounted) {
-          setSensors(response.data);
-          setError(null);
-          setIsLoading(false);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err instanceof Error ? err : new Error('Failed to fetch sensor data'));
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchData();
-    const intervalId = setInterval(fetchData, 60000);
-
-    return () => {
-      isMounted = false;
-      clearInterval(intervalId);
-    };
-  }, []);
 
   if (error && isLoading) {
     return (

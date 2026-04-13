@@ -10,39 +10,18 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import Footer from '@/components/Footer'
 import TimeSlider from '@/components/map/TimeSlider';
+import { useSensors } from '@/hooks/useSensors';
 
 
 
 const Map = () => {
-  
-  const [realSensors, setRealSensors] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { data: realSensors = [], isLoading, error } = useSensors();
   const [timelapseMode, setTimelapseMode] = useState(false);
   const [timelapseData, setTimelapseData] = useState<Record<string, any[]>>({});
   const [timeIndex, setTimeIndex] = useState(0);
   const [timeHours, setTimeHours] = useState<string[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const playIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Fetch real-time sensor data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(API.sensors);
-        setRealSensors(response.data); // Set real sensor data
-        setIsLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch sensor data'));
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-    const intervalId = setInterval(fetchData, 60000); // Refresh every minute
-    return () => clearInterval(intervalId);
-  }, []);
 
   useEffect(() => {
     if (!timelapseMode || realSensors.length === 0) return;
@@ -107,8 +86,15 @@ const Map = () => {
       <div className="min-h-screen bg-gradient-to-b from-white to-secondary/20 dark:from-gray-900 dark:to-gray-800/20">
         <Header />
         <main className="pt-16">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 flex items-center justify-center">
-            <div className="text-center">Loading...</div>
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+            <div className="h-8 w-48 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-4" />
+            <div className="h-5 w-72 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-6" />
+            <div className="grid grid-cols-5 gap-4 mb-6">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
+              ))}
+            </div>
+            <div className="h-[700px] bg-gray-200 dark:bg-gray-700 rounded-xl animate-pulse" />
           </div>
         </main>
       </div>
