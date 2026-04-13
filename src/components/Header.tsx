@@ -90,8 +90,7 @@ const Header = () => {
       href="https://www.simpleaq.org/" 
       target="_blank" 
       rel="noopener noreferrer" 
-      className="flex items-center bg-[#f1f5f9] px-2 py-0.5 rounded-md text-xs font-medium leading-none"
-      style={{ color: '#859973' }}
+      className="flex items-center bg-[#f1f5f9] dark:bg-gray-700 px-2 py-0.5 rounded-md text-xs font-medium leading-none text-[#859973] dark:text-gray-300"
     >
       <span className="leading-none">Powered by SimpleAQ</span>
       <img 

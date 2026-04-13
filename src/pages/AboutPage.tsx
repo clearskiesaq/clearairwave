@@ -39,7 +39,7 @@ const AboutPage: React.FC = () => {
 
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       {/* Section 1: Mission */}
-      <section className="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-16 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800">
+      <section className="min-h-screen flex flex-col md:flex-row items-center justify-center px-6 py-16 bg-white dark:bg-gray-900">
         <div className="md:w-1/2">
           <div className = "w-full">
             <img
@@ -54,7 +54,7 @@ const AboutPage: React.FC = () => {
           <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-4">
             Our Mission
           </h2>
-          <p className="text-lg leading-relaxed text-gray-700">
+          <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
             <strong>Clean air is a basic right.</strong>
             <br />
             
@@ -64,12 +64,12 @@ This project is a community-driven initiative to monitor and improve air quality
       </section>
 
       {/* Section 2: Devices */}
-      <section className="min-h-screen flex flex-col-reverse md:flex-row items-center justify-center px-6 py-16 bg-white dark:bg-gray-900 gap-x-20">
+      <section className="min-h-screen flex flex-col-reverse md:flex-row items-center justify-center px-6 py-16 bg-gradient-to-b from-secondary/30 to-white dark:from-gray-800 dark:to-gray-900 gap-x-20">
         <div className="md:w-1/2 md:pr-12 mt-8 md:mt-0">
           <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent mb-4">
   The Devices
 </h2>
-<p className="text-lg leading-relaxed text-gray-700">
+<p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
   <strong>Built for communities. Trusted by science.</strong>
   <br />
   The air quality data on this site is powered by SimpleAQ sensors — low-cost, open-source devices
@@ -101,7 +101,7 @@ This project is a community-driven initiative to monitor and improve air quality
       </section>
 
       {/* Section 3: Developer Team */}
-<section className="px-6 pt-16 pb-8 bg-gradient-to-b from-blue-50 to-white dark:from-gray-800 dark:to-gray-900 text-center">
+<section className="px-6 pt-16 pb-8 bg-white dark:bg-gray-900 text-center">
         <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-12">
           Meet the Developers
         </h2>
@@ -113,22 +113,22 @@ This project is a community-driven initiative to monitor and improve air quality
           {developers.map((dev, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl shadow-lg p-6 max-w-xs hover:scale-105 transform transition duration-300"
+              className="glass-card rounded-xl shadow-lg p-6 max-w-xs hover:scale-105 transform transition duration-300"
             >
               <a
               href={dev.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="block max-w-xs transform transition duration-300 hover:scale-105"
+              className="block max-w-xs"
               >
-              <div className="bg-white rounded-xl p-6">
+              <div className="p-6">
                 <img
                   src={dev.img}
                   alt={dev.name}
                   className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
                 />
                 <h3 className="text-xl font-semibold text-center">{dev.name}</h3>
-                <p className="text-sm text-gray-600 text-center">{dev.role}</p>
+                <p className="text-sm text-muted-foreground text-center">{dev.role}</p>
               </div>
               </a>
             </div>

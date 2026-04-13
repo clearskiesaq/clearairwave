@@ -24,21 +24,25 @@ const Footer = () => {
                         <li><Link to="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">Home</Link></li>
                         <li><Link to="/dashboard" className="text-sm text-muted-foreground hover:text-primary transition-colors">Dashboard</Link></li>
                         <li><Link to="/map" className="text-sm text-muted-foreground hover:text-primary transition-colors">Map</Link></li>
-                        <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">About</a></li>
+                        <li><Link to="/network" className="text-sm text-muted-foreground hover:text-primary transition-colors">Network Health</Link></li>
                       </ul>
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold mb-4">RESOURCES</h3>
                       <ul className="space-y-2">
-                        <li><Link to="https://clearskiesaq.com/#guide" className="text-sm text-muted-foreground hover:text-primary transition-colors">  Guide</Link></li>
-                        <li><Link to="https://clearskiesaq.com/#aqt" className="text-sm text-muted-foreground hover:text-primary transition-colors">Air Quality Tips</Link></li>
+                        <li><Link to="/#guide" className="text-sm text-muted-foreground hover:text-primary transition-colors">Guide</Link></li>
+                        <li><Link to="/#aqt" className="text-sm text-muted-foreground hover:text-primary transition-colors">Air Quality Tips</Link></li>
+                        <li><Link to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">About Us</Link></li>
+                        <li><a href="https://www.simpleaq.org/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">SimpleAQ</a></li>
                       </ul>
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold mb-4">CONNECT</h3>
                       <ul className="space-y-2">
-                        <li><a href="https://clearskiesaq.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">Real-time Alerts</a></li>
+                        <li><Link to="/#email" className="text-sm text-muted-foreground hover:text-primary transition-colors">Real-time Alerts</Link></li>
                         <li><Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact Us</Link></li>
+                        <li><a href="https://www.facebook.com/groups/904509544135710/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">Community Group</a></li>
+                        <li><Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Host a Sensor</Link></li>
                       </ul>
                     </div>
                   </div>

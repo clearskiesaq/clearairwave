@@ -118,7 +118,7 @@ const HeroSection = () => {
   if (isLoading || !realSensors) {
     return (
       <div className="relative pb-12 pt-28 md:pb-16 md:pt-32 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none -z-10 opacity-30 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50" />
+        <div className="absolute inset-0 pointer-events-none -z-10 opacity-30 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="md:flex md:justify-between md:gap-16 items-center">
             <div className="space-y-5 max-w-2xl">
@@ -166,14 +166,14 @@ const HeroSection = () => {
       <ParticleCanvas aqi={avgAQI} className="-z-10" />
 
       {/* Background gradient */}
-      <div className="absolute inset-0 pointer-events-none -z-10 opacity-30 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50" />
+      <div className="absolute inset-0 pointer-events-none -z-10 opacity-30 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="md:flex md:justify-between md:gap-16 items-center">
+        <div className="md:flex md:justify-between md:gap-12 items-start">
           {/* Left side */}
-          <div className="md:flex-1 space-y-8">
+          <div className="md:flex-1 space-y-6 md:max-w-[50%]">
             <ScrollReveal>
-              <div className="space-y-5 max-w-2xl">
+              <div className="space-y-4 max-w-xl">
                 <span className="inline-flex items-center px-3 py-1 text-xs rounded-full bg-primary/10 text-primary font-medium">
                   Real-time air quality monitoring
                 </span>
@@ -191,9 +191,6 @@ const HeroSection = () => {
                   Currently serving residents of <span className="font-medium text-primary">Licking County, Ohio</span> with real-time data from community-installed sensors.
                 </p>
 
-                <p className="text-sm font-medium text-foreground/80">
-                  {getAQIStatusMessage(avgAQI)}
-                </p>
               </div>
             </ScrollReveal>
 
@@ -206,7 +203,7 @@ const HeroSection = () => {
                   </Link>
                 </Button>
 
-                <Button asChild variant="outline" size="lg" className="rounded-full px-6">
+                <Button asChild variant="outline" size="lg" className="rounded-full px-6 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800">
                   <Link to="/map">Explore Map</Link>
                 </Button>
               </div>
@@ -214,7 +211,7 @@ const HeroSection = () => {
           </div>
 
           {/* Right side */}
-          <div className="md:flex-1 mt-12 md:mt-0 flex flex-col items-center gap-8">
+          <div className="md:flex-1 mt-12 md:mt-0 flex flex-col items-center gap-5">
             {/* Breathability Gauge */}
             <ScrollReveal delay={0.1}>
               <BreathabilityGauge
@@ -225,7 +222,7 @@ const HeroSection = () => {
             </ScrollReveal>
 
             {/* 2x2 stat cards grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+            <div className="grid grid-cols-2 gap-4 w-full">
               <motion.div
                 custom={0}
                 variants={cardVariants}

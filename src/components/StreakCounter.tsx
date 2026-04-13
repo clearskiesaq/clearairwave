@@ -41,8 +41,6 @@ const StreakCounter = () => {
     return () => cancelAnimationFrame(frame);
   }, [isInView, streak]);
 
-  if (streak === 0) return null;
-
   return (
     <motion.div
       ref={ref}

@@ -24,17 +24,12 @@ const Index = () => {
         <HeroSection />
         <EmailSubscription />
 
-        {/* Streak + Best Time section */}
+        {/* Best Time section */}
         <section className="py-12 bg-gradient-to-b from-white to-secondary/20 dark:from-gray-900 dark:to-gray-800/50">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <ScrollReveal>
-                <StreakCounter />
-              </ScrollReveal>
-              <ScrollReveal delay={0.15}>
-                <BestTimeTimeline />
-              </ScrollReveal>
-            </div>
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 max-w-2xl">
+            <ScrollReveal>
+              <BestTimeTimeline />
+            </ScrollReveal>
           </div>
         </section>
 

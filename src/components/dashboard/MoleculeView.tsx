@@ -113,8 +113,6 @@ const MoleculeView = ({ pm25, pm10 = 0, no2 = 0, o3 = 0, so2 = 0 }: MoleculeView
       viewport={{ once: true }}
       className="glass-card rounded-xl p-5"
     >
-      <h3 className="text-sm font-medium text-muted-foreground mb-1">What You're Breathing</h3>
-      <p className="text-xs text-muted-foreground mb-3">Molecules at relative concentrations</p>
 
       <div className="relative rounded-lg overflow-hidden bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
         <canvas

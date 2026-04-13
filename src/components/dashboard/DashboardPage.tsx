@@ -15,8 +15,6 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import AQIGauge from './AQIGauge';
-import LungVisualizer from './LungVisualizer';
-import MoleculeView from './MoleculeView';
 import SensorCompare from './SensorCompare';
 import HeatmapCalendar from './HeatmapCalendar';
 import ExportButton from './ExportButton';
@@ -272,14 +270,18 @@ useEffect(() => {
                 onDataLoaded={() => setLastUpdated(new Date())}
               />
 
-              <div className="flex justify-end mt-4">
-  <button
-    onClick={() => dataTableRef.current?.scrollIntoView({ behavior: 'smooth' })}
-    className="text-sm text-blue-600 hover:underline"
-  >
-    View Full Table ↓
-  </button>
-</div>
+              <div className="flex justify-end mt-2">
+                <button
+                  onClick={() => dataTableRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  View Full Table ↓
+                </button>
+              </div>
+
+              <div className="mt-6">
+                <HeatmapCalendar sensorId={selectedSensorId} />
+              </div>
 
 
               
@@ -322,9 +324,6 @@ useEffect(() => {
               </div>
             </div>
 
-            <LungVisualizer aqi={avgAQI} pm25={stats.averagePM25} />
-
-            <MoleculeView pm25={stats.averagePM25} pm10={0} no2={0} o3={0} so2={0} />
           </div>
         </div>
 
@@ -332,9 +331,6 @@ useEffect(() => {
           <SensorCompare />
         </div>
 
-        <div className="mb-10">
-          <HeatmapCalendar sensorId={selectedSensorId} />
-        </div>
 
                 <p className="text-xs text-muted-foreground text-center italic mb-8">
   Disclaimer: Air quality data is collected from community-deployed sensors for informational purposes. These sensors are not certified regulatory monitors and may vary in accuracy.

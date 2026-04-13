@@ -90,7 +90,7 @@ const Map = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-secondary/20">
+      <div className="min-h-screen bg-gradient-to-b from-white to-secondary/20 dark:from-gray-900 dark:to-gray-800/20">
         <Header />
         <main className="pt-16">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 text-center text-red-500">
@@ -104,7 +104,7 @@ const Map = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white to-secondary/20">
+      <div className="min-h-screen bg-gradient-to-b from-white to-secondary/20 dark:from-gray-900 dark:to-gray-800/20">
         <Header />
         <main className="pt-16">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 flex items-center justify-center">
@@ -135,7 +135,7 @@ const Map = () => {
     }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/20 dark:from-gray-900 dark:to-gray-800/20">
       <Header />
       <main className="pt-16">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
@@ -170,7 +170,7 @@ const Map = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-green-50 shadow-md border border-white/20">
+            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-green-50 dark:from-gray-800 dark:to-green-900/20 shadow-md border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground">Good Quality</div>
@@ -182,7 +182,7 @@ const Map = () => {
               </div>
             </div>
 
-            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-yellow-50 shadow-md border border-white/20">
+            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-yellow-50 dark:from-gray-800 dark:to-yellow-900/20 shadow-md border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground">Moderate Quality</div>
@@ -194,7 +194,7 @@ const Map = () => {
               </div>
             </div>
 
-            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-orange-100 shadow-md border border-white/20">
+            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-orange-100 dark:from-gray-800 dark:to-orange-900/20 shadow-md border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground">Unhealthy for Sensitive</div>
@@ -207,7 +207,7 @@ const Map = () => {
               </div>
             </div>
 
-            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-red-50 shadow-md border border-white/20">
+            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-red-50 dark:from-gray-800 dark:to-red-900/20 shadow-md border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground">Unhealthy</div>
@@ -219,7 +219,7 @@ const Map = () => {
               </div>
             </div>
 
-            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-purple-50 shadow-md border border-white/20">
+            <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-purple-900/20 shadow-md border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs text-muted-foreground">Hazardous</div>
@@ -295,12 +295,11 @@ const Map = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Community Contributors</span>
-                    <span className="font-medium">3</span>
+                    <span className="font-medium">{new Set(realSensors.map((s: any) => `${s.location.lat.toFixed(2)},${s.location.lng.toFixed(2)}`)).size}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Data Points Today</span>
-                    <span className="font-medium">{}</span>
-                    
+                    <span className="font-medium">{realSensors.length * 6 * new Date().getHours()}</span>
                   </div>
                 </div>
 

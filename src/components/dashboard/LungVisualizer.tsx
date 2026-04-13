@@ -87,13 +87,6 @@ const LungVisualizer = ({ aqi, pm25 }: LungVisualizerProps) => {
 
   return (
     <div className="glass-card rounded-xl p-5">
-      <h3 className="text-sm font-medium text-muted-foreground mb-1">Lung Impact</h3>
-      <p className="text-xs text-muted-foreground mb-3">
-        {aqi <= 50 ? 'Clean air — lungs are happy' :
-         aqi <= 100 ? 'Mild irritants present' :
-         aqi <= 150 ? 'Particles accumulating' :
-         'Heavy particle exposure'}
-      </p>
       <div className="relative flex justify-center">
         {/* SVG Lung */}
         <motion.svg

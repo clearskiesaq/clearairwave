@@ -38,7 +38,7 @@ const AQSummary = () => {
 
   if (error) {
     return (
-      <section className="py-16 bg-gradient-to-b from-white to-blue-50">
+      <section className="py-16 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800/50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center text-red-500">
             <h2 className="text-xl font-semibold">Error loading air quality summary</h2>
@@ -51,7 +51,7 @@ const AQSummary = () => {
 
   if (isLoading || !realSensors || !hourlyData) {
     return (
-      <section className="py-16 bg-gradient-to-b from-white to-blue-50">
+      <section className="py-16 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800/50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="space-y-4">
             <div className="h-8 w-64 bg-gray-200 animate-pulse rounded"></div>
@@ -93,7 +93,7 @@ if (pm25Values.length >= 4) {
 
 
   return (
-    <section className="py-16 bg-gradient-to-b from-white to-blue-50">
+    <section className="py-16 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800/50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           <div className="flex-1 space-y-6 max-w-xl">
@@ -125,17 +125,17 @@ if (pm25Values.length >= 4) {
                 </div>
 
                 <div className="flex items-center mt-2 text-sm">
-                  <span 
+                  <span
                     className={cn(
                       "flex items-center",
+                      parseFloat(String(changePercent)) === 0 ? "text-muted-foreground" :
                       isImproving ? "text-aqi-good" : "text-aqi-unhealthy"
                     )}
                   >
-                    {isImproving ? (
-                      <ArrowDown className="h-4 w-4 mr-1" />
-                    ) : (
+                    {parseFloat(String(changePercent)) === 0 ? null :
+                      isImproving ? <ArrowDown className="h-4 w-4 mr-1" /> :
                       <ArrowUp className="h-4 w-4 mr-1" />
-                    )}
+                    }
                     {changePercent}% in the last 3 hours
                   </span>
                 </div>

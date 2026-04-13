@@ -44,18 +44,21 @@ const SensorCompare = () => {
     const fetchComparison = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(API.compare, {
-          params: { sensors: selected.join(','), metric: 'pm2.5', time_range: '24h' }
-        });
-        // Merge data by time
+        // Fetch hourly data for each selected sensor individually
         const timeMap: Record<string, any> = {};
-        Object.entries(res.data).forEach(([sensorName, data]: [string, any]) => {
-          data.forEach((point: any) => {
-            const time = point.time;
-            if (!timeMap[time]) timeMap[time] = { time };
-            timeMap[time][sensorName] = point['pm2.5'] ?? point['pm2.5_ug_m3'] ?? null;
-          });
-        });
+        await Promise.all(selected.map(async (sid) => {
+          const name = sensorNames[sid] || sid;
+          try {
+            const res = await axios.get(API.hourly, {
+              params: { sensor_id: sid, metric: 'pm2.5' }
+            });
+            res.data.forEach((point: any) => {
+              const time = new Date(point.time + 'Z').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              if (!timeMap[time]) timeMap[time] = { time };
+              timeMap[time][name] = point['pm2.5'] ?? point['pm2.5_ug_m3'] ?? null;
+            });
+          } catch { /* skip this sensor */ }
+        }));
         const merged = Object.values(timeMap).sort((a: any, b: any) =>
           a.time < b.time ? -1 : 1
         );
@@ -64,7 +67,7 @@ const SensorCompare = () => {
       setLoading(false);
     };
     fetchComparison();
-  }, [selected]);
+  }, [selected, sensorNames]);
 
   const toggleSensor = (id: string) => {
     if (selected.includes(id)) {

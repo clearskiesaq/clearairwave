@@ -35,7 +35,7 @@ const DataCard: React.FC<DataCardProps> = ({
     <motion.div
       whileHover={{ y: -2, transition: { duration: 0.2 } }}
       className={cn(
-        'glass-card rounded-xl p-5 hover:scale-[1.01] transition-all duration-300',
+        'glass-card rounded-xl p-5 hover:scale-[1.01] transition-all duration-300 h-full',
         onClick && 'cursor-pointer',
         cardClassName
       )}
@@ -61,7 +61,7 @@ const DataCard: React.FC<DataCardProps> = ({
           </div>
           
           {description && (
-            <p className="text-xs text-muted-foreground mt-1">{description}</p>
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{description}</p>
           )}
         </div>
         

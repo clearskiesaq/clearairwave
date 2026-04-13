@@ -125,7 +125,7 @@ const CurrentLocationButton = () => {
     <button
       onClick={handleLocate}
       disabled={isLocating}
-      className="absolute top-4 right-4 z-[1000] bg-white p-2.5 rounded-lg shadow-lg hover:bg-gray-50 transition-colors disabled:opacity-60"
+      className="absolute top-4 right-4 z-[1000] bg-white dark:bg-gray-800 p-2.5 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-60"
       title="Show my location"
       aria-label="Show my location"
     >
@@ -135,7 +135,7 @@ const CurrentLocationButton = () => {
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
       ) : (
-        <LocateFixed className="h-5 w-5 text-gray-700" />
+        <LocateFixed className="h-5 w-5 text-gray-700 dark:text-gray-200" />
       )}
     </button>
   );
@@ -161,11 +161,11 @@ const RecenterButton = ({ sensors }: { sensors: any[] }) => {
   return (
     <button
       onClick={handleRecenter}
-      className="absolute top-16 right-4 z-[1000] bg-white p-2.5 rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
+      className="absolute top-16 right-4 z-[1000] bg-white dark:bg-gray-800 p-2.5 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
       title="Recenter to show all sensors"
       aria-label="Recenter map to all sensors"
     >
-      <Crosshair className="h-5 w-5 text-gray-700" />
+      <Crosshair className="h-5 w-5 text-gray-700 dark:text-gray-200" />
     </button>
   );
 };
@@ -226,7 +226,19 @@ const AQMap = () => {
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showMarkers, setShowMarkers] = useState(true);
-  const [mapStyle, setMapStyle] = useState<'light' | 'dark' | 'satellite'>('light');
+  const [mapStyle, setMapStyle] = useState<'light' | 'dark' | 'satellite'>(
+    () => document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+  );
+
+  // Sync map style with dark mode toggle
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setMapStyle(prev => prev === 'satellite' ? prev : isDark ? 'dark' : 'light');
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
   const tileUrls: Record<string, { url: string; attribution: string }> = {
     light: {
@@ -418,30 +430,22 @@ const AQMap = () => {
       </MapContainer>
 
       {/* Layer controls */}
-      <div className="absolute top-4 left-4 z-[1000] flex flex-col gap-1.5">
+      <div className="absolute bottom-4 left-4 z-[1000] flex flex-col gap-1.5">
         <button
           onClick={() => setShowMarkers(!showMarkers)}
           className={`px-3 py-1.5 rounded-lg text-xs font-medium shadow-md transition-all ${
-            showMarkers ? 'bg-primary text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+            showMarkers ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
           }`}
         >
           Markers
         </button>
-        <button
-          onClick={() => setShowHeatmap(!showHeatmap)}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium shadow-md transition-all ${
-            showHeatmap ? 'bg-primary text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
-        >
-          Heatmap
-        </button>
-        <div className="mt-1 bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
           {(['light', 'dark', 'satellite'] as const).map((style) => (
             <button
               key={style}
               onClick={() => setMapStyle(style)}
               className={`block w-full px-3 py-1.5 text-xs font-medium transition-colors ${
-                mapStyle === style ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50'
+                mapStyle === style ? 'bg-primary/10 text-primary' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               {style.charAt(0).toUpperCase() + style.slice(1)}
@@ -450,8 +454,8 @@ const AQMap = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-16 right-4 bg-white/90 backdrop-blur-md px-3 py-2.5 rounded-lg shadow-md text-xs z-[1000]">
-        <div className="font-medium mb-1.5 text-gray-700">AQI Legend</div>
+      <div className="absolute bottom-16 right-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md px-3 py-2.5 rounded-lg shadow-md text-xs z-[1000]">
+        <div className="font-medium mb-1.5 text-gray-700 dark:text-gray-200">AQI Legend</div>
         <div className="flex flex-col space-y-1">
           {[
             { label: 'Good', color: '#4ade80' },
@@ -463,10 +467,10 @@ const AQMap = () => {
           ].map((item) => (
             <div key={item.label} className="flex items-center gap-2">
               <div
-                className="w-3 h-3 rounded-full border border-gray-300"
+                className="w-3 h-3 rounded-full border border-gray-300 dark:border-gray-600"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-gray-600">{item.label}</span>
+              <span className="text-gray-600 dark:text-gray-300">{item.label}</span>
             </div>
           ))}
         </div>
