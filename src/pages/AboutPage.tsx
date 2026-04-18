@@ -51,10 +51,10 @@ const AboutPage: React.FC = () => {
           
         </div>
         <div className="md:w-1/2 md:pl-12 mt-8 md:mt-0">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-4">
+          <h2 className="text-5xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-6">
             Our Mission
           </h2>
-          <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+          <p className="text-xl leading-relaxed text-gray-700 dark:text-gray-300">
             <strong>Clean air is a basic right.</strong>
             <br />
             
@@ -66,10 +66,10 @@ This project is a community-driven initiative to monitor and improve air quality
       {/* Section 2: Devices */}
       <section className="min-h-screen flex flex-col-reverse md:flex-row items-center justify-center px-6 py-16 bg-gradient-to-b from-secondary/30 to-white dark:from-gray-800 dark:to-gray-900 gap-x-20">
         <div className="md:w-1/2 md:pr-12 mt-8 md:mt-0">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent mb-4">
+          <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent mb-6">
   The Devices
 </h2>
-<p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+<p className="text-xl leading-relaxed text-gray-700 dark:text-gray-300">
   <strong>Built for communities. Trusted by science.</strong>
   <br />
   The air quality data on this site is powered by SimpleAQ sensors — low-cost, open-source devices
@@ -102,10 +102,10 @@ This project is a community-driven initiative to monitor and improve air quality
 
       {/* Section 3: Developer Team */}
 <section className="px-6 pt-16 pb-8 bg-white dark:bg-gray-900 text-center">
-        <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-12">
+        <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-12">
           Meet the Developers
         </h2>
-        <p className="text-muted-foreground mb-12 max-w-xl mx-auto">
+        <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
   Our team of undergraduate developers came together to build this platform with a shared passion for open data, community impact, and environmental justice.
 </p>
 

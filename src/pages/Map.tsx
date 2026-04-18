@@ -1,71 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { API } from '@/config/api';
+import React from 'react';
 import Header from '@/components/Header';
 import AQMap from '@/components/AQMap';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { formatPM25 } from '@/utils/aqiUtils';
-import { Users, AlertCircle, ArrowUpRight, Timer } from 'lucide-react';
+import { Users, AlertCircle, ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import Footer from '@/components/Footer'
-import TimeSlider from '@/components/map/TimeSlider';
 import { useSensors } from '@/hooks/useSensors';
 
 
 
 const Map = () => {
   const { data: realSensors = [], isLoading, error } = useSensors();
-  const [timelapseMode, setTimelapseMode] = useState(false);
-  const [timelapseData, setTimelapseData] = useState<Record<string, any[]>>({});
-  const [timeIndex, setTimeIndex] = useState(0);
-  const [timeHours, setTimeHours] = useState<string[]>([]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const playIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useEffect(() => {
-    if (!timelapseMode || realSensors.length === 0) return;
-
-    const fetchTimelapse = async () => {
-      const allData: Record<string, any[]> = {};
-      let times: string[] = [];
-
-      for (const sensor of realSensors.slice(0, 5)) { // Limit to 5 sensors for speed
-        try {
-          const res = await axios.get(API.hourly, {
-            params: { sensor_id: sensor.id, metric: 'pm2.5' }
-          });
-          allData[sensor.id] = res.data;
-          if (res.data.length > times.length) {
-            times = res.data.map((d: any) => d.time);
-          }
-        } catch { /* silent */ }
-      }
-
-      setTimelapseData(allData);
-      setTimeHours(times);
-      setTimeIndex(times.length - 1);
-    };
-
-    fetchTimelapse();
-  }, [timelapseMode, realSensors]);
-
-  useEffect(() => {
-    if (isPlaying && timeHours.length > 0) {
-      playIntervalRef.current = setInterval(() => {
-        setTimeIndex(prev => {
-          if (prev >= timeHours.length - 1) {
-            setIsPlaying(false);
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, 500);
-    }
-    return () => {
-      if (playIntervalRef.current) clearInterval(playIntervalRef.current);
-    };
-  }, [isPlaying, timeHours.length]);
 
   if (error) {
     return (
@@ -138,23 +84,6 @@ const Map = () => {
 
           </div>
 
-          <div className="flex gap-2 mb-4">
-            <button
-              onClick={() => {
-                setTimelapseMode(!timelapseMode);
-                setIsPlaying(false);
-              }}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                timelapseMode
-                  ? 'bg-primary text-white shadow-md'
-                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm'
-              }`}
-            >
-              <Timer className="h-4 w-4" />
-              {timelapseMode ? 'Exit Timelapse' : 'Timelapse'}
-            </button>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
             <div className="glass-card p-4 rounded-xl bg-gradient-to-br from-white to-green-50 dark:from-gray-800 dark:to-green-900/20 shadow-md border border-white/20">
               <div className="flex items-center justify-between">
@@ -223,15 +152,6 @@ const Map = () => {
               <div className="h-[700px] glass-card rounded-xl shadow-lg overflow-hidden border border-white/20">
                 <AQMap />
               </div>
-              {timelapseMode && (
-                <TimeSlider
-                  hours={timeHours}
-                  currentIndex={timeIndex}
-                  onChange={setTimeIndex}
-                  isPlaying={isPlaying}
-                  onTogglePlay={() => setIsPlaying(!isPlaying)}
-                />
-              )}
             </div>
 
             <div className="space-y-6">
