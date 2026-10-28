@@ -8,6 +8,7 @@ import { AnimatePresence } from 'framer-motion';
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Map from "./pages/Map";
+import EmbedMap from "./pages/EmbedMap";
 import Contact from "./pages/Contact"
 import NotFound from "./pages/NotFound";
 import AboutPage from "./pages/AboutPage";
@@ -52,6 +53,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/map" element={<Map />} />
+              <Route path="/embed/map" element={<EmbedMap />} />
               <Route path="*" element={<NotFound />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/about" element={<AboutPage />} />
